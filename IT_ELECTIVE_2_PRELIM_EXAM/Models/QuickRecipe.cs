@@ -1,32 +1,20 @@
-namespace IT_ELECTIVE_2_PRELIM_EXAM.Models;
+﻿using System;
 
-// EXERCISE 8: Override vs New
-// QuickRecipe inherits from RecipeBase. Your task:
-// - The current code uses 'new' keyword to hide the base method
-// - Change it to use 'override' keyword instead so proper polymorphism works
-// - Add a 'MaxMinutes' property (int) that represents the max time for "quick" recipes
-//
-// Test: When calling GetRecipeInfo() on a RecipeBase reference
-// pointing to a QuickRecipe object, it should call QuickRecipe's version (polymorphism)
-
-public class QuickRecipe : RecipeBase
+namespace IT_ELECTIVE_2_PRELIM_OOP.Models
 {
-    public int MaxMinutes { get; set; }
-
-    public QuickRecipe() : base()
+    public class QuickRecipe : RecipeBase
     {
-        MaxMinutes = 30;
-    }
+        public bool IsQuickMeal { get; set; } = true;
 
-    public QuickRecipe(string title, int prepTime, string difficulty, int maxMinutes)
-        : base(title, prepTime, difficulty)
-    {
-        MaxMinutes = maxMinutes;
-    }
+        public QuickRecipe() { }
 
-    // BUG: This uses 'new' instead of 'override' - fix this!
-    public new string GetRecipeInfo()
-    {
-        return $"{base.GetRecipeInfo()} | Quick: Under {MaxMinutes} min";
+        public QuickRecipe(string title, int prepTimeMinutes, string difficulty, bool isQuickMeal)
+            : base(title, prepTimeMinutes, difficulty)
+        {
+            IsQuickMeal = isQuickMeal;
+        }
+
+        public override string GetRecipeInfo() =>
+            base.GetRecipeInfo() + $", Quick Meal: {(IsQuickMeal ? "Yes" : "No")}";
     }
 }

@@ -1,68 +1,26 @@
-using IT_ELECTIVE_2_PRELIM_EXAM.Models;
+﻿using System;
+using System.Collections.Generic;
+using IT_ELECTIVE_2_PRELIM_OOP.Models;
 
-namespace IT_ELECTIVE_2_PRELIM_EXAM.Services;
-
-// EXERCISE 10: Access Modifiers
-// The Kitchen class currently has everything as 'public'.
-// Your task: Fix the access modifiers to follow proper encapsulation:
-//
-// - 'kitchenName' should be private (internal detail)
-// - 'headChef' should be private (internal detail)
-// - 'mealCount' property should be public (read-only externally)
-// - 'meals' list should be private (internal storage)
-// - 'AddMeal()' should be public (external API)
-// - 'GetMeals()' should be public (external API)
-// - 'RemoveMeal()' should be public (external API)
-// - 'GetKitchenInfo()' should be public (external API)
-// - 'PrepareMeal()' should be protected (only for derived classes)
-
-public class Kitchen
+namespace IT_ELECTIVE_2_PRELIM_OOP.Services
 {
-    public string kitchenName;
-    public string headChef;
-    public int mealCount;
-    public List<Meal> meals;
-
-    public Kitchen(string name, string chef)
+    public class Kitchen
     {
-        kitchenName = name;
-        headChef = chef;
-        meals = new List<Meal>();
-        mealCount = 0;
-    }
+        private List<Meal> meals = new();
 
-    public void AddMeal(Meal meal)
-    {
-        meals.Add(meal);
-        mealCount++;
-    }
+        public void AddMeal(Meal meal) => meals.Add(meal);
 
-    public List<Meal> GetMeals()
-    {
-        return new List<Meal>(meals);
-    }
+        public List<Meal> GetMeals() => meals;
 
-    public bool RemoveMeal(string mealName)
-    {
-        var meal = meals.FirstOrDefault(m =>
-            m.Name.Equals(mealName, StringComparison.OrdinalIgnoreCase));
+        public bool RemoveMeal(string name) =>
+            meals.RemoveAll(m => m.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) > 0;
 
-        if (meal != null)
+        protected void PrepareMeal(Meal meal)
         {
-            meals.Remove(meal);
-            mealCount--;
-            return true;
+            Console.WriteLine($"Preparing {meal.Name}...");
         }
-        return false;
-    }
 
-    public string GetKitchenInfo()
-    {
-        return $"Kitchen: {kitchenName} | Chef: {headChef} | Meals: {mealCount}";
-    }
-
-    public string PrepareMeal(string mealName)
-    {
-        return $"Preparing {mealName} in {kitchenName}...";
+        public string GetKitchenInfo() =>
+            $"Kitchen currently has {meals.Count} meal(s).";
     }
 }
