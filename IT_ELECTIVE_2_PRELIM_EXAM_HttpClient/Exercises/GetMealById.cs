@@ -1,24 +1,48 @@
-namespace IT_ELECTIVE_2_PRELIM_EXAM_HttpClient.Exercises;
+﻿using System;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
 
-// EXERCISE 3: GET Lookup by ID
-// TheMealDB API: https://themealdb.com/api/json/v1/1/lookup.php?i={id}
-//
-// Your task:
-// 1. Use the HttpClient to look up meal with ID 52772
-// 2. Assert status code is 200 OK
-// 3. Parse the JSON and assert the meal name is "Arrabiata"
-//
-// Note: TheMealDB meal IDs are numeric (52771 = Arrabiata)
-
-public static class GetMealById
+namespace IT_ELECTIVE_2_PRELIM_EXAM_HttpClient.Exercises
 {
-    public static async Task Run(System.Net.Http.HttpClient client)
+    public class GetMealById
     {
-        // TODO: Send GET request to https://themealdb.com/api/json/v1/1/lookup.php?i=52771
-        // TODO: Assert status code is 200 OK
-        // TODO: Parse the response JSON
-        // TODO: Assert the meal name (strMeal) is "Arrabiata"
+        public static async Task Run()
+        {
+            using HttpClient client = new HttpClient();
 
-        throw new NotImplementedException();
+            string url = "https://www.themealdb.com/api/json/v1/1/lookup.php?i=52771";
+
+            HttpResponseMessage response = await client.GetAsync(url);
+            string body = await response.Content.ReadAsStringAsync();
+
+            JsonDocument doc = JsonDocument.Parse(body);
+
+            JsonElement meals = doc.RootElement.GetProperty("meals");
+
+            Console.WriteLine("========== Exercise 3 ==========");
+
+            if (response.IsSuccessStatusCode &&
+                meals.ValueKind == JsonValueKind.Array)
+            {
+                string mealName = meals[0].GetProperty("strMeal").GetString()!;
+
+                if (mealName == "Spicy Arrabiata Penne")
+                {
+                    Console.WriteLine("[PASS]");
+                    Console.WriteLine($"Meal Name: {mealName}");
+                }
+                else
+                {
+                    Console.WriteLine("[FAIL]");
+                }
+            }
+            else
+            {
+                Console.WriteLine("[FAIL]");
+            }
+
+            Console.WriteLine();
+        }
     }
 }

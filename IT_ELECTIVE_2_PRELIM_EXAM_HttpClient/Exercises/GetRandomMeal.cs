@@ -1,26 +1,33 @@
-namespace IT_ELECTIVE_2_PRELIM_EXAM_HttpClient.Exercises;
+﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 
-// EXERCISE 1: GET Random Meal
-// TheMealDB API: https://themealdb.com/api/json/v1/1/random.php
-//
-// Your task:
-// 1. Use the HttpClient to send a GET request to the URL above
- // 2. Read the response as a string
-// 3. Assert that the status code is 200 OK
-// 4. Assert that the response body is not null or empty
-//
-// Hint: Use await client.GetAsync(url) then check response.StatusCode
-// Hint: Use await response.Content.ReadAsStringAsync() to get the body
-
-public static class GetRandomMeal
+namespace IT_ELECTIVE_2_PRELIM_EXAM_HttpClient.Exercises
 {
-    public static async Task Run(System.Net.Http.HttpClient client)
+    public class GetRandomMeal
     {
-        // TODO: Send GET request to https://themealdb.com/api/json/v1/1/random.php
-        // TODO: Read the response content as a string
-        // TODO: Assert status code is 200 OK
-        // TODO: Assert response body is not null or empty
+        public static async Task Run()
+        {
+            using HttpClient client = new HttpClient();
 
-        throw new NotImplementedException();
+            string url = "https://www.themealdb.com/api/json/v1/1/random.php";
+
+            HttpResponseMessage response = await client.GetAsync(url);
+            string body = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine("========== Exercise 1 ==========");
+            Console.WriteLine($"Status Code: {(int)response.StatusCode}");
+
+            if (response.IsSuccessStatusCode && !string.IsNullOrWhiteSpace(body))
+            {
+                Console.WriteLine("[PASS] Successfully retrieved a random meal.");
+            }
+            else
+            {
+                Console.WriteLine("[FAIL]");
+            }
+
+            Console.WriteLine();
+        }
     }
 }
